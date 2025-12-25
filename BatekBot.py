@@ -32,7 +32,7 @@ async def help(interaction: nextcord.Interaction):
 
 @bot.slash_command(name="grandm obile", description="грэндмобайл", guild_ids=[serverID])
 async def granobile(interaction: nextcord.Interaction):
-    await interaction.response.send_message("гранд мобайл это игра с открытым миром где можно стать кем угодно хоть блогером полицейским или боссом мафии. А скачать ее можно в апп строке или гугл плей или по ссылке в шапке профиля, а по промокоду 'БАТЕК' вы получите крутые бонусы")
+    await interaction.response.send_message("гранд мобайл это игра с открытым миром где можно стать кем угодно хоть блогером полицейским или боссом мафии. А скачать ее можно в апп строке или гугл плей или по ссылке в шапке профиля, а по промокоду батек вы получите крутые бонусы")
 
 
 bot.run("MTQ1MzUzNzExNjQ1MjU1Mjc3MQ.G5fUXK.8nM8IwZ9rIPLDfEvUQHLQVug4MJtJRNz6gOM-A") #поменять если другой бот (у нас батек так что нахуй)
