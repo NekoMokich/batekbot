@@ -26,4 +26,9 @@ async def batek(interaction: nextcord.Interaction):
     else:
         await interaction.response.send_message("аидитынахуй")
 
+@bot.slash_command(name="help", description="слєш хелп", guild_ids=[serverID])
+async def help(interaction: nextcord.Interaction):
+    await interaction.response.send_message("аидитынахуй")
+
+
 bot.run("MTQ1MzUzNzExNjQ1MjU1Mjc3MQ.G5fUXK.8nM8IwZ9rIPLDfEvUQHLQVug4MJtJRNz6gOM-A") #поменять если другой бот (у нас батек так что нахуй)
