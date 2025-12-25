@@ -22,7 +22,7 @@ class Donwload(nextcord.ui.View):
         self.value = None
         self.video_id = video_id
 
-    @nextcord.ui.button(label = "СКАЧАТЬ БЕЗ ВИРУСОВ (КНОПКА БЛЯТЬ 1 РАЗ НАЖАЛИ И ВСЕ А ТО ПИЗДА)", style = nextcord.ButtonStyle.green)
+    @nextcord.ui.button(label = "СКАЧАТЬ БЕЗ ВИРУСОВ (ЕСЛИ НЕТ ВИДЕО КНОПКУ ДРОЧИТЕ!!!)", style = nextcord.ButtonStyle.green)
     async def donwload(self, button: nextcord.ui.Button, interaction: nextcord.Interaction):
         from pytubefix import YouTube
 
