@@ -11,7 +11,6 @@ intents.members = True
 intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-
 #блок с раиской
 videos_rais = scrapetube.get_channel(channel_url="https://www.youtube.com/@batek_official9120", content_type='shorts')
 video_ids_rais = [video['videoId'] for video in videos_rais]
@@ -64,7 +63,6 @@ async def batek(interaction: nextcord.Interaction):
     else:
         await interaction.response.send_message("аидитынахуй")
 
-
 #блок с викторовичем
 @bot.slash_command(name="victorovich", description="В СТАРОМ ПАРКЕ ПАХНЕТ ХВОЙНОЙ ТИШИНОЙ")
 async def victorovich(interaction: nextcord.Interaction):
@@ -82,14 +80,18 @@ async def victorovich(interaction: nextcord.Interaction):
     else:
         await interaction.response.send_message("аидитынахуй")
 
-
-
 @bot.slash_command(name="help", description="слєш хелп")
 async def help(interaction: nextcord.Interaction):
     await interaction.response.send_message("аидитынахуй")
+
+@bot.slash_command(name="bomjara", description="АКАКФИЛЬМНАНОУТБУКЕВКЛЮЧИТЬ")
+async def bomjara(interaction: nextcord.Interaction):
+    file_path = "video_2025-11-10_11-48-39.mp4"
+
+    await interaction.response.send_message("АКАКФИЛЬМ НА НОУТБУКЕ ВКЛЮЧИТ", file=nextcord.File(fp=file_path))
 
 @bot.slash_command(name="grandmobile", description="грэндмобайл")
 async def granmobile(interaction: nextcord.Interaction):
     await interaction.response.send_message('гранд мобайл это игра с открытым миром где можно стать кем угодно хоть блогером полицейским или боссом мафии. А скачать ее можно в апп строке или гугл плей или по ссылке в шапке профиля, а по промокоду "БАТЕК" вы получите крутые бонусы')
 
-bot.run("MTQ1MzUzNzExNjQ1MjU1Mjc3MQ.G5fUXK.8nM8IwZ9rIPLDfEvUQHLQVug4MJtJRNz6gOM-A") #поменять если другой бот (у нас батек так что нахуй)
+bot.run("MTAyMjkzNzM4NDYwNzgxMzcyMg.G3UxKT.GqTJsRtjwOIe-N0lJnjy6BHaRiOOXoobt-iYnA") #поменять если другой бот (у нас батек так что нахуй)
