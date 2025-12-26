@@ -84,14 +84,13 @@ async def victorovich(interaction: nextcord.Interaction):
 async def help(interaction: nextcord.Interaction):
     await interaction.response.send_message("аидитынахуй")
 
-@bot.slash_command(name="bomjara", description="АКАКФИЛЬМНАНОУТБУКЕВКЛЮЧИТЬ")
+@bot.slash_command(name="bomjara", description="АКАКФИЛЬМНАНОУТБУКЕВКЛЮЧИТЬ") #БОМЖАРО
 async def bomjara(interaction: nextcord.Interaction):
     file_path = "video_2025-11-10_11-48-39.mp4"
-
     await interaction.response.send_message("АКАКФИЛЬМ НА НОУТБУКЕ ВКЛЮЧИТ", file=nextcord.File(fp=file_path))
 
 @bot.slash_command(name="grandmobile", description="грэндмобайл")
 async def granmobile(interaction: nextcord.Interaction):
     await interaction.response.send_message('гранд мобайл это игра с открытым миром где можно стать кем угодно хоть блогером полицейским или боссом мафии. А скачать ее можно в апп строке или гугл плей или по ссылке в шапке профиля, а по промокоду "БАТЕК" вы получите крутые бонусы')
 
-bot.run("MTAyMjkzNzM4NDYwNzgxMzcyMg.G3UxKT.GqTJsRtjwOIe-N0lJnjy6BHaRiOOXoobt-iYnA") #поменять если другой бот (у нас батек так что нахуй)
+bot.run("MTQ1MzUzNzExNjQ1MjU1Mjc3MQ.G5fUXK.8nM8IwZ9rIPLDfEvUQHLQVug4MJtJRNz6gOM-A") #поменять если другой бот (у нас батек так что нахуй)
