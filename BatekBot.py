@@ -4,6 +4,14 @@ from nextcord.ext import commands
 import random
 import scrapetube
 import os
+import distro
+import socket
+import os
+import psutil
+from uptime import uptime
+import subprocess
+import shutil
+import platform
 
 #а тут епта бля короче у нас настройки
 intents = nextcord.Intents.default()
@@ -25,14 +33,13 @@ if not video_ids_victorovich:
 
 #кнопки с вирусами
 class Donwload(nextcord.ui.View):
-    def __init__(self, video_id):
-        super().__init__()
+    def init(self, video_id):
+        super().init()
         self.value = None
         self.video_id = video_id
 
     @nextcord.ui.button(label = "СКАЧАТЬ БЕЗ ВИРУСОВ (ЕСЛИ НЕТ ВИДЕО КНОПКУ ДРОЧИТЕ!!!)", style = nextcord.ButtonStyle.green)
     async def donwload(self, button: nextcord.ui.Button, interaction: nextcord.Interaction):
-        from pytubefix import YouTube
 
         url = f"https://www.youtube.com/shorts/{self.video_id}"
         yt = YouTube(url)
@@ -62,6 +69,8 @@ async def batek(interaction: nextcord.Interaction):
         await view.wait()
     else:
         await interaction.response.send_message("аидитынахуй")
+
+
 
 #блок с викторовичем
 @bot.slash_command(name="victorovich", description="В СТАРОМ ПАРКЕ ПАХНЕТ ХВОЙНОЙ ТИШИНОЙ")
@@ -93,4 +102,54 @@ async def bomjara(interaction: nextcord.Interaction):
 async def granmobile(interaction: nextcord.Interaction):
     await interaction.response.send_message('гранд мобайл это игра с открытым миром где можно стать кем угодно хоть блогером полицейским или боссом мафии. А скачать ее можно в апп строке или гугл плей или по ссылке в шапке профиля, а по промокоду "БАТЕК" вы получите крутые бонусы')
 
-bot.run("MTQ1MzUzNzExNjQ1MjU1Mjc3MQ.G5fUXK.8nM8IwZ9rIPLDfEvUQHLQVug4MJtJRNz6gOM-A") #поменять если другой бот (у нас батек так что нахуй)
+#фетч
+@bot.slash_command(name="fastfetch", description="ЭЭЭФЕТЧИ")
+async def fastfetch(interaction: nextcord.Interaction):
+    # processor
+    command = 'cat /proc/cpuinfo | grep "model name" | cut -f 2 -d ":"'
+    result = os.popen(command).read().strip()
+
+# uptime block
+    seconds_uptime = uptime()
+    days = int(seconds_uptime // 86400)
+    hours = int((seconds_uptime % 86400) // 3600)
+    minutes = int((seconds_uptime % 3600) // 60)
+
+    ##package
+    package_managers = {
+        "dpkg": "dpkg-query -f '${binary:Package}\n' -W",  # Debian, Ubuntu, Kali, Mint
+        "rpm": "rpm -qa",  # RHEL, CentOS, Fedora, OpenSUSE
+        "pacman": "pacman -Q",  # Arch Linux, Manjaro
+        "apk": "apk info",  # Alpine Linux
+        "dnf": "dnf list installed",  # Modern RHEL/Fedora (fallback if rpm missing)
+        "emerge": "qlist -I",  # Gentoo
+        "zypper": "zypper se --installed-only",  # OpenSUSE (fallback if rpm missing)
+        "xbps-query": "xbps-query -l"  # Void Linux
+    }
+
+    pckg_count = 0
+
+    for manager, command in package_managers.items():
+        if shutil.which(manager):
+            output = subprocess.check_output(command, shell=True, text=True)
+            lines = [line for line in output.splitlines() if line.strip()]
+            count = len(lines)
+            pckg_count = count
+
+    ##ram
+    # 1. Исправляем математику: добавляем ** (возведение в степень)
+    ram_bytes = psutil.virtual_memory().total
+    ram_gygabytes = round(ram_bytes / (1024 ** 3), 2)
+    used_gb = round(psutil.virtual_memory().used / (1024 ** 3), 2)
+
+    # 2. Исправляем f-строку: выносим операцию с '\n' в отдельную переменную
+    cpu_name = result.split('\n')[0].strip()
+
+    await interaction.response.send_message(f"os: {distro.name()} \n"
+                                            f"host: {socket.gethostname()} \n"
+                                            f"cpu: {cpu_name} \n"  # Теперь здесь нет бэкслеша
+                                            f"uptime: {f'{minutes}m' if days == 0 and hours == 0 else f'{hours}h, {minutes}m' if days == 0 else f'{days}d, {hours}h, {minutes}m'} \n"
+                                            f"pkgs: {pckg_count} \n"
+                                            f"ram: {used_gb}gb / {ram_gygabytes}gb \n", ephemeral=True)
+
+bot.run("MTAyMjkzNzM4NDYwNzgxMzcyMg.G3UxKT.GqTJsRtjwOIe-N0lJnjy6BHaRiOOXoobt-iYnA") #поменять если другой бот (у нас батек так что нахуй)
