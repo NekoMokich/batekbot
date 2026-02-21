@@ -1,155 +1,238 @@
 from pytubefix import YouTube
-import nextcord
-from nextcord.ext import commands
+import discord
+from discord.ext import commands 
+from discord import app_commands
 import random
 import scrapetube
 import os
-import distro
-import socket
-import os
-import psutil
 from uptime import uptime
-import subprocess
-import shutil
-import platform
 
-#а тут епта бля короче у нас настройки
-intents = nextcord.Intents.default()
+# а тут епта бля короче у нас настройки
+intents = discord.Intents.default()
 intents.members = True
 intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-#блок с раиской
+
+# Синхронизация слеш-команд при запуске
+@bot.event
+async def on_ready():
+    await bot.tree.sync()
+    print(f'Бот {bot.user} запущен и слеш-команды синхронизированы!')
+
+
+# блок с раиской
 videos_rais = scrapetube.get_channel(channel_url="https://www.youtube.com/@batek_official9120", content_type='shorts')
 video_ids_rais = [video['videoId'] for video in videos_rais]
 if not video_ids_rais:
     print("Аидитынахуй")
+    
+videos_rais_videos = scrapetube.get_channel(channel_url="https://www.youtube.com/@batek_official9120", content_type='videos')
+video_ids_rais_videos = [video['videoId'] for video in videos_rais_videos]
+if not video_ids_rais_videos:
+    print("Аидитынахуй")
 
 # блок с викторовичем
-videos_victorovich = scrapetube.get_channel(channel_url="https://www.youtube.com/@batya_viktorovich", content_type='shorts')
+videos_victorovich = scrapetube.get_channel(channel_url="https://www.youtube.com/@batya_viktorovich",content_type='shorts')
 video_ids_victorovich = [video['videoId'] for video in videos_victorovich]
 if not video_ids_victorovich:
     print("Аидитынахуй")
 
-#кнопки с вирусами
-class Donwload(nextcord.ui.View):
-    def init(self, video_id):
-        super().init()
-        self.value = None
-        self.video_id = video_id
+videos_victorovich_videos = scrapetube.get_channel(channel_url="https://www.youtube.com/@batya_viktorovich", content_type='videos')
+video_ids_victorovich_videos = [video['videoId'] for video in videos_victorovich_videos]    
+if not video_ids_victorovich_videos:
+    print("Аидитынахуй")
 
-    @nextcord.ui.button(label = "СКАЧАТЬ БЕЗ ВИРУСОВ (ЕСЛИ НЕТ ВИДЕО КНОПКУ ДРОЧИТЕ!!!)", style = nextcord.ButtonStyle.green)
-    async def donwload(self, button: nextcord.ui.Button, interaction: nextcord.Interaction):
+#Тимурка
+videos_timur_shorts = scrapetube.get_channel(channel_url="https://www.youtube.com/@SravneniyaOfficial",content_type='shorts')
+video_ids_timur_shorts = [video['videoId'] for video in videos_timur_shorts]
+if not video_ids_timur_shorts:
+    print("Аидитынахуй")
 
-        url = f"https://www.youtube.com/shorts/{self.video_id}"
-        yt = YouTube(url)
+videos_timur_video = scrapetube.get_channel(channel_url="https://www.youtube.com/@SravneniyaOfficial",content_type='videos')
+video_ids_timur_video = [video['videoId'] for video in videos_timur_video]
+if not video_ids_timur_video:
+    print("Аидитынахуй")
 
-        stream = yt.streams.get_highest_resolution() #сами вирусы
-        video_path = stream.download()
+#скачка видео
+class VideoChoice(discord.ui.View):
+    # При создании кнопок передаем списки шортсов и видео
+    def __init__(self, shorts_list, videos_list):
+        super().__init__()
+        self.shorts_list = shorts_list
+        self.videos_list = videos_list
 
-        await interaction.response.send_message("вот твои ебучие вирусы", file=nextcord.File(video_path))
-        os.remove(video_path)
+    # Кнопка для шортсов (синяя)
+    @discord.ui.button(label="📱 Случайный Шортс", style=discord.ButtonStyle.blurple)
+    async def btn_shorts(self, interaction: discord.Interaction, button: discord.ui.Button):
+        if not self.shorts_list:
+            await interaction.response.send_message("Шортсов пока нет :(", ephemeral=True)
+            return
+            
+        random_id = random.choice(self.shorts_list)
+        url = f"https://youtu.be/{random_id}"
+        
+        await interaction.response.send_message(f"Вот твой шортс:\n{url}")
 
-        self.value = True
-        self.stop()
+    # Кнопка для обычных видео (зеленая)
+    @discord.ui.button(label="📺 Обычное видео", style=discord.ButtonStyle.green)
+    async def btn_video(self, interaction: discord.Interaction, button: discord.ui.Button):
+        if not self.videos_list:
+            await interaction.response.send_message("Обычных видео пока нет :(", ephemeral=True)
+            return
+            
+        random_id = random.choice(self.videos_list)
+        url = f"https://youtu.be/{random_id}"
+        
+        # Отправляем видео и прикрепляем твою кнопку скачивания
+        await interaction.response.send_message(f"Вот обычный видос:\n{url}")
 
-#блок с батьком
-@bot.slash_command(name="batek", description="белые розы")
-async def batek(interaction: nextcord.Interaction):
-    aiditinaxuy = random.randint(1,100)
+# блок с Тимуром
+@bot.tree.command(name="timur", description="4к120фпс")
+async def timur(interaction: discord.Interaction):
+    aiditinaxuy = random.randint(1, 100)
+    if aiditinaxuy > 10:
+        view = VideoChoice(video_ids_timur_shorts, video_ids_timur_video)
+        
+        await interaction.response.send_message("че смотреть будем", view=view)
+    else:
+        await interaction.response.send_message("аидитынахуй")
+
+# блок с батьком (Раис)
+@bot.tree.command(name="batek", description="белые розы")
+async def batek(interaction: discord.Interaction):
+    aiditinaxuy = random.randint(1, 100)
 
     if aiditinaxuy > 10:
-        random_id = random.choice(video_ids_rais)
-        view = Donwload(random_id)
-        # Передаём view в параметре view
-        await interaction.response.send_message(
-            "https://www.youtube.com/shorts/" + random_id,
-            view=view
-        )
-        await view.wait()
+        # Передаем списки Раиса (шортсы и обычные видео) в наш класс с кнопками выбора
+        view = VideoChoice(video_ids_rais, video_ids_rais_videos)
+        await interaction.response.send_message("че смотреть будем", view=view)
+    else:
+        await interaction.response.send_message("аидитынахуй")
+
+# блок с викторовичем
+@bot.tree.command(name="victorovich", description="В СТАРОМ ПАРКЕ ПАХНЕТ ХВОЙНОЙ ТИШИНОЙ")
+async def victorovich(interaction: discord.Interaction):
+    aiditinaxuy = random.randint(1, 100)
+
+    if aiditinaxuy > 10:
+        view = VideoChoice(video_ids_victorovich, video_ids_victorovich_videos)
+        await interaction.response.send_message("че смотреть будем", view=view)
     else:
         await interaction.response.send_message("аидитынахуй")
 
 
-
-#блок с викторовичем
-@bot.slash_command(name="victorovich", description="В СТАРОМ ПАРКЕ ПАХНЕТ ХВОЙНОЙ ТИШИНОЙ")
-async def victorovich(interaction: nextcord.Interaction):
-    aiditinaxuy = random.randint(1,100)
-
-    if aiditinaxuy > 10:
-        random_id = random.choice(video_ids_victorovich)
-        view = Donwload(random_id)
-        # Передаём view в параметре view
-        await interaction.response.send_message(
-            "https://www.youtube.com/shorts/" + random_id,
-            view=view
-        )
-        await view.wait()
-    else:
-        await interaction.response.send_message("аидитынахуй")
-
-@bot.slash_command(name="help", description="слєш хелп")
-async def help(interaction: nextcord.Interaction):
+@bot.tree.command(name="help", description="слєш хелп")
+async def help_command(
+interaction: discord.Interaction):  # Заменил имя функции help -> help_command во избежание конфликта со встроенным хелпом
     await interaction.response.send_message("аидитынахуй")
 
-@bot.slash_command(name="bomjara", description="АКАКФИЛЬМНАНОУТБУКЕВКЛЮЧИТЬ") #БОМЖАРО
-async def bomjara(interaction: nextcord.Interaction):
-    file_path = "video_2025-11-10_11-48-39.mp4"
-    await interaction.response.send_message("АКАКФИЛЬМ НА НОУТБУКЕ ВКЛЮЧИТ", file=nextcord.File(fp=file_path))
+@bot.tree.command(name="kupyansk", description="купянскнаш")  # КУПЯНСК
+async def kupyansk(interaction: discord.Interaction):
+    await interaction.response.send_message("https://www.youtube.com/watch?v=D8Ll1tAAaQM")
 
-@bot.slash_command(name="grandmobile", description="грэндмобайл")
-async def granmobile(interaction: nextcord.Interaction):
-    await interaction.response.send_message('гранд мобайл это игра с открытым миром где можно стать кем угодно хоть блогером полицейским или боссом мафии. А скачать ее можно в апп строке или гугл плей или по ссылке в шапке профиля, а по промокоду "БАТЕК" вы получите крутые бонусы')
 
-#фетч
-@bot.slash_command(name="fastfetch", description="ЭЭЭФЕТЧИ")
-async def fastfetch(interaction: nextcord.Interaction):
-    # processor
-    command = 'cat /proc/cpuinfo | grep "model name" | cut -f 2 -d ":"'
-    result = os.popen(command).read().strip()
+@bot.tree.command(name="bomjara", description="АКАКФИЛЬМНАНОУТБУКЕВКЛЮЧИТЬ")  # БОМЖАРО
+async def bomjara(interaction: discord.Interaction):
+    aiditinaxuy = random.randint(1, 2)
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    
+    if aiditinaxuy == 1:
+        file_path = os.path.join(BASE_DIR, "video", "bomjara1.mp4")
+        await interaction.response.send_message(file=discord.File(fp=file_path))
+    else:
+        file_path = os.path.join(BASE_DIR, "video", "bomjaro2.mp4")
+        await interaction.response.send_message(file=discord.File(fp=file_path))
 
-# uptime block
-    seconds_uptime = uptime()
-    days = int(seconds_uptime // 86400)
-    hours = int((seconds_uptime % 86400) // 3600)
-    minutes = int((seconds_uptime % 3600) // 60)
+@bot.tree.command(name="roflvideo", description="не смешная хуйня про 320 пошути же даун ебучий")  # другое
+async def roflvideo(interaction: discord.Interaction):
+    aiditinaxuy = random.randint(1, 2)
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-    ##package
-    package_managers = {
-        "dpkg": "dpkg-query -f '${binary:Package}\n' -W",  # Debian, Ubuntu, Kali, Mint
-        "rpm": "rpm -qa",  # RHEL, CentOS, Fedora, OpenSUSE
-        "pacman": "pacman -Q",  # Arch Linux, Manjaro
-        "apk": "apk info",  # Alpine Linux
-        "dnf": "dnf list installed",  # Modern RHEL/Fedora (fallback if rpm missing)
-        "emerge": "qlist -I",  # Gentoo
-        "zypper": "zypper se --installed-only",  # OpenSUSE (fallback if rpm missing)
-        "xbps-query": "xbps-query -l"  # Void Linux
-    }
+    if aiditinaxuy == 1:
+        file_path = os.path.join(BASE_DIR, "video", "makuos.mp4")
+        await interaction.response.send_message(file=discord.File(fp=file_path))
+    else:
+        file_path = os.path.join(BASE_DIR, "video", "shefos.mp4")
+        await interaction.response.send_message(file=discord.File(fp=file_path))
+        
+@bot.tree.command(name="grandmobile", description="грэндмобайл")
+async def granmobile(interaction: discord.Interaction):
+    await interaction.response.send_message(
+        'гранд мобайл это игра с открытым миром где можно стать кем угодно хоть блогером полицейским или боссом мафии. А скачать ее можно в апп строке или гугл плей или по ссылке в шапке профиля, а по промокоду "БАТЕК" вы получите крутые бонусы')
 
-    pckg_count = 0
 
-    for manager, command in package_managers.items():
-        if shutil.which(manager):
-            output = subprocess.check_output(command, shell=True, text=True)
-            lines = [line for line in output.splitlines() if line.strip()]
-            count = len(lines)
-            pckg_count = count
+#тун тун тун
+async def music_autocomplete(interaction: discord.Interaction, current: str) -> list[app_commands.Choice[str]]:
+    music_dir = 'music'
+    if not os.path.exists(music_dir):
+        return []
+    files = [f for f in os.listdir(music_dir) if f.endswith(('.mp3', '.wav', '.ogg'))]
+    matches = [f for f in files if current.lower() in f.lower()]
+    return [app_commands.Choice(name=match, value=match) for match in matches[:25]]
 
-    ##ram
-    # 1. Исправляем математику: добавляем ** (возведение в степень)
-    ram_bytes = psutil.virtual_memory().total
-    ram_gygabytes = round(ram_bytes / (1024 ** 3), 2)
-    used_gb = round(psutil.virtual_memory().used / (1024 ** 3), 2)
+@bot.tree.command(name='play', description='Включить музыку из папки')
+@app_commands.autocomplete(filename=music_autocomplete)
+async def play(interaction: discord.Interaction, filename: str = None):
+    await interaction.response.defer()
 
-    # 2. Исправляем f-строку: выносим операцию с '\n' в отдельную переменную
-    cpu_name = result.split('\n')[0].strip()
+    if not interaction.user.voice:
+        await interaction.followup.send("❌ Вы должны находиться в голосовом канале!")
+        return
 
-    await interaction.response.send_message(f"os: {distro.name()} \n"
-                                            f"host: {socket.gethostname()} \n"
-                                            f"cpu: {cpu_name} \n"  # Теперь здесь нет бэкслеша
-                                            f"uptime: {f'{minutes}m' if days == 0 and hours == 0 else f'{hours}h, {minutes}m' if days == 0 else f'{days}d, {hours}h, {minutes}m'} \n"
-                                            f"pkgs: {pckg_count} \n"
-                                            f"ram: {used_gb}gb / {ram_gygabytes}gb \n", ephemeral=True)
+    channel = interaction.user.voice.channel
+    voice_client = interaction.guild.voice_client
 
-bot.run("MTAyMjkzNzM4NDYwNzgxMzcyMg.G3UxKT.GqTJsRtjwOIe-N0lJnjy6BHaRiOOXoobt-iYnA") #поменять если другой бот (у нас батек так что нахуй)
+    if not voice_client:
+        voice_client = await channel.connect()
+    else:
+        if not voice_client.is_connected():
+            await voice_client.disconnect(force=True)
+            voice_client = await channel.connect()
+        elif voice_client.channel != channel:
+            await voice_client.move_to(channel)
+
+    music_dir = 'music'
+
+    if not os.path.exists(music_dir):
+        os.makedirs(music_dir)
+        await interaction.followup.send(f"📁 Папка '{music_dir}' не найдена. Я создал её, закинь туда музыку!")
+        return
+
+    if filename is None:
+        files = [f for f in os.listdir(music_dir) if f.endswith(('.mp3', '.wav', '.ogg'))]
+        if not files:
+            await interaction.followup.send("🪹 В папке 'music' нет аудиофайлов.")
+            return
+        filename = random.choice(files)
+    else:
+        if not filename.endswith(('.mp3', '.wav', '.ogg')):
+            filename += '.mp3'
+
+    file_path = os.path.join(music_dir, filename)
+
+    if not os.path.exists(file_path):
+        await interaction.followup.send(f"❌ Файл '**{filename}**' не найден.")
+        return
+
+    if voice_client.is_playing():
+        voice_client.stop()
+
+    try:
+        source = discord.FFmpegPCMAudio(file_path)
+        voice_client.play(source, after=lambda e: print(f'Ошибка плеера: {e}') if e else None)
+        await interaction.followup.send(f"🎶 Сейчас играет: **{filename}**")
+    except Exception as e:
+        await interaction.followup.send(f"❌ Ошибка при воспроизведении: {e}")
+
+@bot.tree.command(name='stop', description='Остановить текущую музыку')
+async def stop(interaction: discord.Interaction):
+    voice_client = interaction.guild.voice_client
+    
+    if voice_client and voice_client.is_playing():
+        voice_client.stop()
+        await interaction.response.send_message("🛑 Музыка остановлена.")
+    else:
+        await interaction.response.send_message("❌ Сейчас ничего не играет.")
+
+bot.run("MTQ1MzUzNzExNjQ1MjU1Mjc3MQ.G5fUXK.8nM8IwZ9rIPLDfEvUQHLQVug4MJtJRNz6gOM-A")
