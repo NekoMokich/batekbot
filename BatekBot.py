@@ -88,7 +88,7 @@ class VideoChoice(discord.ui.View):
         await interaction.response.send_message(f"Вот обычный видос:\n{url}")
 
 # блок с Тимуром
-@bot.tree.command(name="timur", description="4к120фпс")
+@bot.tree.command(name="timur", description="ЗАЧЕМ Я ПОМЕНЯЛ ЕЕ НА ЭТО НА ЧЕРНОБЕЛОЕ")
 async def timur(interaction: discord.Interaction):
     aiditinaxuy = random.randint(1, 100)
     if aiditinaxuy > 10:
@@ -171,7 +171,7 @@ async def music_autocomplete(interaction: discord.Interaction, current: str) -> 
     matches = [f for f in files if current.lower() in f.lower()]
     return [app_commands.Choice(name=match, value=match) for match in matches[:25]]
 
-@bot.tree.command(name='play', description='Включить музыку из папки')
+@bot.tree.command(name='play', description='Я НАФАРМИЛ КРИПТЫ КАК СКУФ')
 @app_commands.autocomplete(filename=music_autocomplete)
 async def play(interaction: discord.Interaction, filename: str = None):
     await interaction.response.defer()
@@ -225,7 +225,7 @@ async def play(interaction: discord.Interaction, filename: str = None):
     except Exception as e:
         await interaction.followup.send(f"❌ Ошибка при воспроизведении: {e}")
 
-@bot.tree.command(name='stop', description='Остановить текущую музыку')
+@bot.tree.command(name='stop', description='ВЫКЛЮЧИ ЕГО НАХУЙ')
 async def stop(interaction: discord.Interaction):
     voice_client = interaction.guild.voice_client
     
