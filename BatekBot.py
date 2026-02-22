@@ -1,11 +1,9 @@
-from pytubefix import YouTube
 import discord
 from discord.ext import commands 
 from discord import app_commands
 import random
 import scrapetube
 import os
-from uptime import uptime
 
 # а тут епта бля короче у нас настройки
 intents = discord.Intents.default()
@@ -136,10 +134,10 @@ async def kupyansk(interaction: discord.Interaction):
 
 @bot.tree.command(name="bomjara", description="АКАКФИЛЬМНАНОУТБУКЕВКЛЮЧИТЬ")  # БОМЖАРО
 async def bomjara(interaction: discord.Interaction):
-    aiditinaxuy = random.randint(1, 2)
+    aiditinaxuy = random.randint(0, 10)
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     
-    if aiditinaxuy == 1:
+    if aiditinaxuy > 5:
         file_path = os.path.join(BASE_DIR, "video", "bomjara1.mp4")
         await interaction.response.send_message(file=discord.File(fp=file_path))
     else:
@@ -148,10 +146,10 @@ async def bomjara(interaction: discord.Interaction):
 
 @bot.tree.command(name="roflvideo", description="не смешная хуйня про 320 пошути же даун ебучий")  # другое
 async def roflvideo(interaction: discord.Interaction):
-    aiditinaxuy = random.randint(1, 2)
+    aiditinaxuy = random.randint(0, 10)
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-    if aiditinaxuy == 1:
+    if aiditinaxuy >= 5:
         file_path = os.path.join(BASE_DIR, "video", "makuos.mp4")
         await interaction.response.send_message(file=discord.File(fp=file_path))
     else:
