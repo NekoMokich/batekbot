@@ -129,7 +129,9 @@ interaction: discord.Interaction):  # Заменил имя функции help 
 
 @bot.tree.command(name="kupyansk", description="купянскнаш")  # КУПЯНСК
 async def kupyansk(interaction: discord.Interaction):
-    await interaction.response.send_message("https://www.youtube.com/watch?v=D8Ll1tAAaQM")
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(BASE_DIR, "video", "kupyanskdis.mp4")
+    await interaction.response.send_message(file=discord.File(fp=file_path))
 
 
 @bot.tree.command(name="bomjara", description="АКАКФИЛЬМНАНОУТБУКЕВКЛЮЧИТЬ")  # БОМЖАРО
