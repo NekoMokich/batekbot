@@ -162,7 +162,7 @@ async def granmobile(interaction: discord.Interaction):
         'гранд мобайл это игра с открытым миром где можно стать кем угодно хоть блогером полицейским или боссом мафии. А скачать ее можно в апп строке или гугл плей или по ссылке в шапке профиля, а по промокоду "БАТЕК" вы получите крутые бонусы')
 
 
-#тун тун тун
+#тун тун тун сахур бр бр бр патапим
 async def music_autocomplete(interaction: discord.Interaction, current: str) -> list[app_commands.Choice[str]]:
     music_dir = 'music'
     if not os.path.exists(music_dir):
