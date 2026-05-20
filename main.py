@@ -19,7 +19,7 @@ async def on_ready():
     print(f'Бот {bot.user} запущен и слеш-команды синхронизированы!')
 
 
-# блок с раиской
+# блок с раиской (редиска)
 videos_rais = scrapetube.get_channel(channel_url="https://www.youtube.com/@batek_official9120", content_type='shorts')
 video_ids_rais = [video['videoId'] for video in videos_rais]
 if not video_ids_rais:
