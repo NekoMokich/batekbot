@@ -236,3 +236,5 @@ async def stop(interaction: discord.Interaction):
         await interaction.response.send_message("❌ Сейчас ничего не играет.")
 
 bot.run("MTQ1MzUzNzExNjQ1MjU1Mjc3MQ.G5fUXK.8nM8IwZ9rIPLDfEvUQHLQVug4MJtJRNz6gOM-A")
+
+#тут ржака какая то
