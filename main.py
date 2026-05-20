@@ -132,7 +132,7 @@ async def kupyansk(interaction: discord.Interaction):
     await interaction.response.send_message(file=discord.File(fp=file_path))
 
 
-@bot.tree.command(name="bomjara", description="АКАКФИЛЬМНАНОУТБУКЕВКЛЮЧИТЬ")  # БОМЖАРО
+@bot.tree.command(name="bomjara", description="АКАКФИЛЬМНАНОУТБУКЕВКЛЮЧИТЬ")  # БОМЖАРО(лучший дистр)
 async def bomjara(interaction: discord.Interaction):
     aiditinaxuy = random.randint(0, 10)
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
