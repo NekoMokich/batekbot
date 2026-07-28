@@ -1,0 +1,48 @@
+services:
+  # 1. Сервер базы данных PostgreSQL
+  db:
+    image: postgres:16-alpine
+    container_name: batekbot_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-1}
+      POSTGRES_DB: ${DB_NAME:-batekbot}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-batekbot}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 2. Сам Discord бот
+  bot:
+    build: .
+    container_name: batekbot_app
+    restart: always
+    env_file:
+      - .env
+    environment:
+      DB_HOST: db # Подключаемся внутри docker-сети к сервису 'db'
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # 3. Веб-интерфейс для просмотра БД (PgWeb — лёгкий и быстрой веб-клиент)
+  pgweb:
+    image: sosedoff/pgweb:latest
+    container_name: batekbot_pgweb
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      DATABASE_URL: "postgres://${DB_USER:-postgres}:${DB_PASSWORD:-1}@db:5432/${DB_NAME:-batekbot}?sslmode=disable"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

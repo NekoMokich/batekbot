@@ -109,7 +109,8 @@ class Video(commands.Cog):
     async def timur(self, interaction: discord.Interaction):
         async with async_session_maker() as session:
             result = await session.execute(
-                select(User).where(User.username == interaction.user.name))
+                select(User).where(User.username == interaction.user.name)
+            )
             user = result.scalar_one_or_none()
             if user is None:
                 new_user = User(id=interaction.user.id, username=interaction.user.name)
@@ -117,7 +118,7 @@ class Video(commands.Cog):
                 await session.commit()
             else:
                 print("Пользователь уже существует!")
-                
+
         aiditinaxuy = random.randint(1, 100)
         if aiditinaxuy > 10:
             view = VideoChoice(video_ids_timur_shorts, video_ids_timur_video)
@@ -129,7 +130,8 @@ class Video(commands.Cog):
     async def batek(self, interaction: discord.Interaction):
         async with async_session_maker() as session:
             result = await session.execute(
-                select(User).where(User.username == interaction.user.name))
+                select(User).where(User.username == interaction.user.name)
+            )
             user = result.scalar_one_or_none()
             if user is None:
                 new_user = User(id=interaction.user.id, username=interaction.user.name)
@@ -149,7 +151,8 @@ class Video(commands.Cog):
     async def victorovich(self, interaction: discord.Interaction):
         async with async_session_maker() as session:
             result = await session.execute(
-                select(User).where(User.username == interaction.user.name))
+                select(User).where(User.username == interaction.user.name)
+            )
             user = result.scalar_one_or_none()
             if user is None:
                 new_user = User(id=interaction.user.id, username=interaction.user.name)

@@ -2,13 +2,11 @@ import os
 
 from dotenv import load_dotenv
 from sqlalchemy import (
-    Column,
-    Integer,
+    BigInteger,
     String,
 )
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from sqlalchemy import BigInteger, String
 
 load_dotenv()
 
@@ -35,8 +33,9 @@ class Base(DeclarativeBase):
 
 ####это по идеи в отдельном но будет тут
 
+
 class User(Base):
     __tablename__ = "users"
-    
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True) # Discord User ID
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True)  # Discord User ID
     username: Mapped[str] = mapped_column(String(100), nullable=False)
