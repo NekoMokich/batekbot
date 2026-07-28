@@ -5,6 +5,9 @@ import discord
 import yt_dlp
 from discord import app_commands
 from discord.ext import commands
+from sqlalchemy import select
+
+from database.database import User, async_session_maker
 
 
 def get_youtube_videos(channel_url: str, tab: str = "videos", max_count: int = None) -> list[str]:
@@ -104,6 +107,17 @@ class Video(commands.Cog):
 
     @app_commands.command(name="timur", description="ЗАЧЕМ Я ПОМЕНЯЛ ЕЕ НА ЭТО НА ЧЕРНОБЕЛОЕ")
     async def timur(self, interaction: discord.Interaction):
+        async with async_session_maker() as session:
+            result = await session.execute(
+                select(User).where(User.username == interaction.user.name))
+            user = result.scalar_one_or_none()
+            if user is None:
+                new_user = User(id=interaction.user.id, username=interaction.user.name)
+                session.add(new_user)
+                await session.commit()
+            else:
+                print("Пользователь уже существует!")
+                
         aiditinaxuy = random.randint(1, 100)
         if aiditinaxuy > 10:
             view = VideoChoice(video_ids_timur_shorts, video_ids_timur_video)
@@ -113,6 +127,17 @@ class Video(commands.Cog):
 
     @app_commands.command(name="batek", description="белые розы")
     async def batek(self, interaction: discord.Interaction):
+        async with async_session_maker() as session:
+            result = await session.execute(
+                select(User).where(User.username == interaction.user.name))
+            user = result.scalar_one_or_none()
+            if user is None:
+                new_user = User(id=interaction.user.id, username=interaction.user.name)
+                session.add(new_user)
+                await session.commit()
+            else:
+                print("Пользователь уже существует!")
+
         aiditinaxuy = random.randint(1, 100)
         if aiditinaxuy > 10:
             view = VideoChoice(video_ids_rais, video_ids_rais_videos)
@@ -122,6 +147,17 @@ class Video(commands.Cog):
 
     @app_commands.command(name="victorovich", description="В СТАРОМ ПАРКЕ ПАХНЕТ ХВОЙНОЙ ТИШИНОЙ")
     async def victorovich(self, interaction: discord.Interaction):
+        async with async_session_maker() as session:
+            result = await session.execute(
+                select(User).where(User.username == interaction.user.name))
+            user = result.scalar_one_or_none()
+            if user is None:
+                new_user = User(id=interaction.user.id, username=interaction.user.name)
+                session.add(new_user)
+                await session.commit()
+            else:
+                print("Пользователь уже существует!")
+
         aiditinaxuy = random.randint(1, 100)
         if aiditinaxuy > 10:
             view = VideoChoice(video_ids_victorovich, video_ids_victorovich_videos)

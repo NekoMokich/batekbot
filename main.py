@@ -30,4 +30,4 @@ async def on_ready():
     print(f"Бот {bot.user} запущен и слеш-команды синхронизированы!")
 
 
-bot.run(main_token)
+bot.run(test_token)
