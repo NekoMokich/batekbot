@@ -1,9 +1,7 @@
-import discord
-from discord.ext import commands 
-from discord import app_commands
-import random
-import scrapetube
 import os
+
+import discord
+from discord.ext import commands
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -25,11 +23,11 @@ async def setup_hook():
     await bot.load_extension("cogs.roflcal")
     await bot.load_extension("cogs.video")
 
+
 @bot.event
 async def on_ready():
     await bot.tree.sync()
-    print(f'Бот {bot.user} запущен и слеш-команды синхронизированы!')
-   
-bot.run(test_token)
+    print(f"Бот {bot.user} запущен и слеш-команды синхронизированы!")
 
 
+bot.run(main_token)

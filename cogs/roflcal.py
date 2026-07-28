@@ -7,10 +7,11 @@ import socket
 import subprocess
 import sys
 import time
+
+import discord
 import distro
 import psutil
 import uptime
-import discord
 from discord import app_commands
 from discord.ext import commands
 
@@ -56,13 +57,10 @@ def generate_batekfetch_info() -> str:
         "xbps-query": "xbps-query -l",
     }
 
-    pckg_count = 0
     for manager, command in package_managers.items():
         if shutil.which(manager):
             try:
-                output = subprocess.check_output(command, shell=True, text=True)
-                lines = [line for line in output.splitlines() if line.strip()]
-                pckg_count = len(lines)
+                subprocess.check_output(command, shell=True, text=True)
                 break
             except Exception:
                 pass
@@ -121,7 +119,9 @@ class RoflCal(commands.Cog):
             file_path = os.path.join(BASE_DIR, "..", "video", "bomjaro2.mp4")
             await interaction.response.send_message(file=discord.File(fp=file_path))
 
-    @app_commands.command(name="roflvideo", description="не смешная хуйня про 320 пошути же даун ебучий")
+    @app_commands.command(
+        name="roflvideo", description="не смешная хуйня про 320 пошути же даун ебучий"
+    )
     async def roflvideo(self, interaction: discord.Interaction):
         aiditinaxuy = random.randint(0, 10)
         BASE_DIR = os.path.dirname(os.path.abspath(__file__))
