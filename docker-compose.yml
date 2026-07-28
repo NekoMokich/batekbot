@@ -37,9 +37,29 @@ services:
     container_name: batekbot_pgweb
     restart: always
     ports:
-      - "8081:8081"
+      - "28081:8081"
     environment:
       DATABASE_URL: "postgres://${DB_USER:-postgres}:${DB_PASSWORD:-1}@db:5432/${DB_NAME:-batekbot}?sslmode=disable"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # 4. Автоматический сервис резервного копирования БД
+  db-backup:
+    image: prodrigestivill/postgres-backup-local:16-alpine
+    container_name: batekbot_db_backup
+    restart: always
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_DB: ${DB_NAME:-batekbot}
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-1}
+      SCHEDULE: "@daily"
+      BACKUP_KEEP_DAYS: 7
+      BACKUP_KEEP_WEEKS: 4
+      BACKUP_KEEP_MONTHS: 6
+    volumes:
+      - ./backups:/backups
     depends_on:
       db:
         condition: service_healthy
