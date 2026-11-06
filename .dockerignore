@@ -5,8 +5,4 @@
 .env
 .env.*
 .slim
-venv
-__pycache__
-**/__pycache__
 rust/target
-docs/build
