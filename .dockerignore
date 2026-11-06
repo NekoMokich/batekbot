@@ -1,9 +1,8 @@
-.venv
-venv
-__pycache__
-*.pyc
+# Контекст сборки не должен тащить артефакты и секреты.
 .git
 .gitignore
-.ruff_cache
-.pre-commit-config.yaml
-.pre-commit-config.yaml.cache
+.ignore
+.env
+.env.*
+.slim
+rust/target

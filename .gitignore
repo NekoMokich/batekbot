@@ -29,3 +29,18 @@ ENV/
 
 # Database backups
 backups/
+
+# Rust rewrite build artifacts
+rust/target/
+yt_cache.json
+
+# Deepwork state
+.slim/
+
+# Пример окружения коммитится
+!.env.example
+
+# Мусор от запусков и редакторов
+*.log
+yt_cache.json.tmp
+.DS_Store
