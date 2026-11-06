@@ -1,0 +1,55 @@
+# Независимый запуск Rust-версии: docker compose -f docker-compose.rust.yml up -d
+# Переменные берутся из .env рядом с этим файлом (см. .env.example).
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: batekbot_rust_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER:?задайте DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?задайте DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME:?задайте DB_NAME}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - postgres_rust_data:/var/lib/postgresql/data
+    ports:
+      # Только loopback: бот работает в сети хоста и ходит в базу через
+      # 127.0.0.1. Наружу порт не публикуется.
+      - "127.0.0.1:5432:5432"
+
+  bot:
+    build:
+      context: .
+      dockerfile: rust/Dockerfile.alpine
+      # На этой машине контейнерный DNS не достаёт deb.debian.org, поэтому
+      # apt внутри сборки работает через сеть хоста.
+      network: host
+    container_name: batekbot_rust_app
+    restart: always
+    # ufw на этой машине режет исходящие из bridge-сети docker: apt и Discord
+    # недоступны, при этом из сети хоста всё работает (проверено 2026-11-05).
+    # Поэтому бот ходит в интернет через сеть хоста, а база слушает loopback.
+    network_mode: host
+    env_file:
+      - .env
+    environment:
+      DB_HOST: 127.0.0.1
+      DB_PORT: 5432
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      # Кэш YouTube лежит в /app/yt_cache.json (BATEK_ROOT=/app). Том сохраняет
+      # его между пересозданиями контейнера. При первом создании Docker
+      # наполняет том текущим /app из образа (music/ и video/), поэтому том
+      # надо удалить, если медиа в образе обновились. Портов и хостовых путей
+      # у сервиса нет: база остаётся приватной, наружу торчит только Discord.
+      - batek_rust_data:/app
+
+volumes:
+  postgres_rust_data:
+  batek_rust_data:
